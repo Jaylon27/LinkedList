@@ -12,6 +12,7 @@
 
 #include "CSVparser.hpp"
 
+
 using namespace std;
 
 //============================================================================
@@ -79,7 +80,6 @@ public:
  * Default constructor
  */
 LinkedList::LinkedList() {
-    // FIXME (1): Initialize housekeeping variables
     //set head and tail equal to nullptr
     head = nullptr;
     tail = nullptr;
@@ -107,7 +107,6 @@ LinkedList::~LinkedList() {
  * Append a new bid to the end of the list
  */
 void LinkedList::Append(Bid bid) {
-    // FIXME (2): Implement append logic
      // Create new node
     Node* newNode = new Node(bid);
 
@@ -131,7 +130,6 @@ void LinkedList::Append(Bid bid) {
  * Prepend a new bid to the start of the list
  */
 void LinkedList::Prepend(Bid bid) {
-    // FIXME (3): Implement prepend logic
     // Create new node
     Node* newNode = new Node(bid);
 
@@ -179,7 +177,6 @@ void LinkedList::PrintList() {
  * @param bidId The bid id to remove from the list
  */
 void LinkedList::Remove(string bidId) {
-    // FIXME (5): Implement remove logic
     // Special case if matching node is the head
     if (head != nullptr && head->bid.bidId == bidId) {
         Node* temp = head;      // Hold onto the current head
@@ -213,7 +210,6 @@ void LinkedList::Remove(string bidId) {
  * @param bidId The bid id to search for
  */
 Bid LinkedList::Search(string bidId) {
-    // FIXME (6): Implement search logic
      // Special case if matching bid is the head
     if (head != nullptr && head->bid.bidId == bidId) {
         return head->bid; // Return the bid of the head node
@@ -291,7 +287,9 @@ Bid getBid() {
  *
  * @return a LinkedList containing all the bids read
  */
-void loadBids(string csvPath, LinkedList *list) {
+void loadBids(LinkedList *list) {
+    std::string csvPath = "/Users/jaylonjones/Downloads/LinkedList/CS 300 eBid_Monthly_Sales.csv";
+
     cout << "Loading CSV file " << csvPath << endl;
 
     // initialize the CSV Parser
@@ -384,7 +382,7 @@ int main(int argc, char* argv[]) {
         case 2:
             ticks = clock();
 
-            loadBids(csvPath, &bidList);
+            loadBids(&bidList);
 
             cout << bidList.Size() << " bids read" << endl;
 
