@@ -1,8 +1,8 @@
 //============================================================================
 // Name        : LinkedList.cpp
-// Author      : Your Name
+// Author      : Jaylon Jones
 // Version     : 1.0
-// Copyright   : Copyright © 2023 SNHU COCE
+// Copyright   : Copyright ï¿½ 2023 SNHU COCE
 // Description : Lab 3-2 Lists and Searching
 //============================================================================
 
@@ -81,6 +81,10 @@ public:
 LinkedList::LinkedList() {
     // FIXME (1): Initialize housekeeping variables
     //set head and tail equal to nullptr
+    head = nullptr;
+    tail = nullptr;
+    size = 0;
+    
 }
 
 /**
@@ -104,13 +108,23 @@ LinkedList::~LinkedList() {
  */
 void LinkedList::Append(Bid bid) {
     // FIXME (2): Implement append logic
-    //Create new node
-    //if there is nothing at the head...
-            // new node becomes the head and the tail
-    //else 
+     // Create new node
+    Node* newNode = new Node(bid);
+
+    // if there is nothing at the head (list is empty)
+    if (head == nullptr) {
+        // new node becomes the head and the tail
+        head = newNode;
+        tail = newNode;
+    } else {
         // make current tail node point to the new node
-        // and tail becomes the new node
-    //increase size count
+        tail->next = newNode;
+        // tail becomes the new node
+        tail = newNode;
+    }
+
+    // increase size count
+    size++;
 }
 
 /**
@@ -119,13 +133,24 @@ void LinkedList::Append(Bid bid) {
 void LinkedList::Prepend(Bid bid) {
     // FIXME (3): Implement prepend logic
     // Create new node
+    Node* newNode = new Node(bid);
 
-    // if there is already something at the head...
-        // new node points to current head as its next node
+    // If there is already something at the head...
+    if (head != nullptr) {
+        // New node points to current head as its next node
+        newNode->next = head;
+    }
 
-    // head now becomes the new node
-    //increase size count
+    // Head now becomes the new node
+    head = newNode;
 
+    // If the list was empty, also update tail
+    if (tail == nullptr) {
+        tail = head;
+    }
+
+    // Increase size count
+    size++;
 }
 
 /**
@@ -133,11 +158,19 @@ void LinkedList::Prepend(Bid bid) {
  */
 void LinkedList::PrintList() {
     // FIXME (4): Implement print logic
-    // start at the head
+    Node* current = head;
 
-    // while loop over each node looking for a match
-        //output current bidID, title, amount and fund
-        //set current equal to next
+     // Loop over each node
+    while (current != nullptr) {
+        // Output current bidID, title, amount, and fund
+        cout << "Bid ID: " << current->bid.bidId << endl;
+        cout << "Title: " << current->bid.title << endl;
+        cout << "Amount: " << current->bid.amount << endl;
+        cout << "Fund: " << current->bid.fund << endl;
+        
+        // Move to the next node
+        current = current->next;
+    }
 }
 
 /**
@@ -147,23 +180,31 @@ void LinkedList::PrintList() {
  */
 void LinkedList::Remove(string bidId) {
     // FIXME (5): Implement remove logic
-    // special case if matching node is the head
-        // make head point to the next node in the list
-        //decrease size count
-        //return
+    // Special case if matching node is the head
+    if (head != nullptr && head->bid.bidId == bidId) {
+        Node* temp = head;      // Hold onto the current head
+        head = head->next;      // Make head point to the next node
+        delete temp;            // Free up memory held by temp
+        size--;                 // Decrease size count
+        return;
+    }
 
-    // start at the head
-    // while loop over each node looking for a match
-        // if the next node bidID is equal to the current bidID
-        	// hold onto the next node temporarily
-         // make current node point beyond the next node
-         // now free up memory held by temp
-         // decrease size count
-         //return
+    // Start at the head
+    Node* current = head;
 
-    // current node is equal to next node
-    
-
+    // Loop over each node looking for a match
+    while (current != nullptr && current->next != nullptr) {
+        // If the next node bidID is equal to the specified bidID
+        if (current->next->bid.bidId == bidId) {
+            Node* temp = current->next;      // Hold onto the next node
+            current->next = temp->next;      // Make current node point beyond the next node
+            delete temp;                     // Free up memory held by temp
+            size--;                          // Decrease size count
+            return;
+        }
+        // Move to the next node
+        current = current->next;
+    }
 }
 
 /**
@@ -173,18 +214,27 @@ void LinkedList::Remove(string bidId) {
  */
 Bid LinkedList::Search(string bidId) {
     // FIXME (6): Implement search logic
+     // Special case if matching bid is the head
+    if (head != nullptr && head->bid.bidId == bidId) {
+        return head->bid; // Return the bid of the head node
+    }
 
-    // special case if matching bid is the head
+    // Start at the head of the list
+    Node* current = head;
 
-    // start at the head of the list
+    // Keep searching until end reached with while loop (current != nullptr)
+    while (current != nullptr) {
+        // If the current node matches the specified bid ID, return current bid
+        if (current->bid.bidId == bidId) {
+            return current->bid;
+        }
+        // Move to the next node
+        current = current->next;
+    }
 
-    // keep searching until end reached with while loop (current != nullptr)
-        // if the current node matches, return current bid
-        // else current node is equal to next node
-
-    //(the next two statements will only execute if search item is not found)
-        //create new empty bid
-        //return empty bid 
+    // Return an empty bid if not found
+    Bid emptyBid;
+    return emptyBid;
 }
 
 /**
